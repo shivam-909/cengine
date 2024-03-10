@@ -11,8 +11,8 @@
 #include "../math/linmath.h"
 #include "../types.h"
 
-#define SCREEN_WIDTH 384
-#define SCREEN_HEIGHT 216
+#define SCREEN_WIDTH 2560
+#define SCREEN_HEIGHT 1440
 #define EPSILON 1e-20f
 #define LARGE_VALUE 1e30f
 

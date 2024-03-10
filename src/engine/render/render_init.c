@@ -12,7 +12,7 @@ void init_render_state()
 
   global.render_state.window = SDL_CreateWindow(
       "CEngine", SDL_WINDOWPOS_CENTERED_DISPLAY(0),
-      SDL_WINDOWPOS_CENTERED_DISPLAY(0), 1280, 720, SDL_WINDOW_ALLOW_HIGHDPI);
+      SDL_WINDOWPOS_CENTERED_DISPLAY(0), 1080, 1080, SDL_WINDOW_ALLOW_HIGHDPI);
 
   ASSERT(global.render_state.window, "failed to create SDL window: %s\n",
          SDL_GetError());

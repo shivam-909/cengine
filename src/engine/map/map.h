@@ -3,7 +3,7 @@
 
 #include "../types.h"
 
-#define MAP_SIZE 8
+#define MAP_SIZE 12
 
 // Defines locations of walls and their colours.
 extern const u8 MAPDATA[MAP_SIZE * MAP_SIZE];
