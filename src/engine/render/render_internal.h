@@ -15,6 +15,6 @@ typedef struct
   v2 pos;
 } RaycastHit;
 
-static void render_vertical_line(int x, int y0, int y1, u32 color);
+static void render_vertical_line(RenderState *render_state, int x, int y0, int y1, u32 color);
 
 #endif // RENDER_INTERNAL_H

@@ -74,7 +74,7 @@ lib-sdl:
 libs: lib-sdl
 
 $(OBJ): $(BIN)/%.o: %.c
-	bear -- $(CC) -o $@ -MMD -c $(CCFLAGS) $(INCFLAGS) $<
+	$(CC) -o $@ -MMD -c $(CCFLAGS) $(INCFLAGS) $<
 
 $(OUT): $(OBJ)
 	$(LD) -o $@ $^ $(LDFLAGS)

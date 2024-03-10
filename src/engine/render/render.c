@@ -4,47 +4,52 @@
 //
 
 #include "render.h"
-#include "../global.h"
 #include "../map/map.h"
 #include "../util.h"
 #include "render_internal.h"
+#include <math.h>
+#include <stdio.h>
 
-static void render_vertical_line(int x, int y0, int y1, u32 color)
+static void render_vertical_line(RenderState *render_state, int x, int y0,
+                                 int y1, u32 color)
 {
   for (int y = y0; y <= y1; y++)
   {
-    global.render_state.pixels[(y * SCREEN_WIDTH) + x] = color;
+    render_state->pixels[(y * SCREEN_WIDTH) + x] = color;
   }
 }
 
-void render(void)
+void render(RenderState *render_state)
 {
   for (int x = 0; x < SCREEN_WIDTH; x++)
   {
     const f32 xcam = (2 * (x / (f32)(SCREEN_WIDTH))) - 1;
 
-    const v2 dir = {global.render_state.params.dir.x +
-                        global.render_state.params.plane.x * xcam,
-                    global.render_state.params.dir.y +
-                        global.render_state.params.plane.y * xcam};
+    const v2 dir = {
+        render_state->params.dir.x + render_state->params.plane.x * xcam,
+        render_state->params.dir.y + render_state->params.plane.y * xcam};
 
-    v2 pos = global.render_state.params.pos;
+    v2 pos = render_state->params.pos;
     v2i ipos = {(int)pos.x, (int)pos.y};
 
-    // The distance a ray needs to travel to intersect with a grid line, for both x and y.
-    // Epsilon is used to avoid division by zero.
+    // The distance a ray needs to travel to intersect with a grid line, for
+    // both x and y. Epsilon is used to avoid division by zero.
     const v2 delta_distance = {
         fabsf(dir.x) < EPSILON ? LARGE_VALUE : fabsf(1.0f / dir.x),
         fabsf(dir.y) < EPSILON ? LARGE_VALUE : fabsf(1.0f / dir.y),
     };
 
-    // The distance a ray needs to trave from pos, to the first grid line, for both x and y.
+    // The distance a ray needs to trave from pos, to the first grid line, for
+    // both x and y.
     v2 side_distance = {
-        delta_distance.x * (dir.x < 0 ? (pos.x - ipos.x) : (ipos.x + 1 - pos.x)),
-        delta_distance.y * (dir.y < 0 ? (pos.y - ipos.y) : (ipos.y + 1 - pos.y)),
+        delta_distance.x *
+            (dir.x < 0 ? (pos.x - ipos.x) : (ipos.x + 1 - pos.x)),
+        delta_distance.y *
+            (dir.y < 0 ? (pos.y - ipos.y) : (ipos.y + 1 - pos.y)),
     };
 
-    // Tells us the direction of the ray, 1 or -1, which will indicate up/down or left/right.
+    // Tells us the direction of the ray, 1 or -1, which will indicate up/down
+    // or left/right.
     const v2i step = {(int)sign(dir.x), (int)sign(dir.y)};
 
     RaycastHit hit = {0, 0, {0.0f, 0.0f}};
@@ -68,7 +73,8 @@ void render(void)
                  ipos.y < MAP_SIZE,
              "out of bounds");
 
-      // Populate with the value of the map at the current position. Non-zero values are walls.
+      // Populate with the value of the map at the current position. Non-zero
+      // values are walls.
       hit.val = MAPDATA[ipos.y * MAP_SIZE + ipos.x];
     }
 
@@ -89,7 +95,8 @@ void render(void)
       break;
     }
 
-    // Shading hack. Wall is lighter or darker depending on what grid line its perpendicular to.
+    // Shading hack. Wall is lighter or darker depending on what grid line its
+    // perpendicular to.
     if (hit.side == 1)
     {
       const u32 br = ((color & 0xFF00FF) * 0xC0) >> 8,
@@ -108,8 +115,8 @@ void render(void)
               y0 = max((SCREEN_HEIGHT / 2) - (h / 2), 0),
               y1 = min((SCREEN_HEIGHT / 2) + (h / 2), SCREEN_HEIGHT - 1);
 
-    render_vertical_line(x, 0, y0, 0xFF202020);
-    render_vertical_line(x, y0, y1, color);
-    render_vertical_line(x, y1, SCREEN_HEIGHT - 1, 0xFF505050);
+    render_vertical_line(render_state, x, 0, y0, 0xFF202020);
+    render_vertical_line(render_state, x, y0, y1, color);
+    render_vertical_line(render_state, x, y1, SCREEN_HEIGHT - 1, 0xFF505050);
   }
 }

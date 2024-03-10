@@ -2,9 +2,10 @@
 #define VIEW_H
 
 #include "../types.h"
+#include "../render/render.h"
 
-void rotate(f32 rot);
+void rotate(RenderState *render_state, f32 rot);
 
-void processk(const u8 *ks);
+void processk(RenderState *render_state, const u8 *ks);
 
 #endif // !VIEW.H

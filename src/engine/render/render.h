@@ -33,13 +33,15 @@ typedef struct render_state
   u32 *pixels;
 } RenderState;
 
-// Render ingests the current rendering parameters and mutates the global rendering state. It is called every frame.
-void render(void);
+// Render ingests the current rendering parameters and mutates the global
+// rendering state. It is called every frame.
+void render(RenderState *render_state);
 
 // Initialises the rendering state window, renderer and texture.
-void init_render_state();
+void init_render_state(RenderState *render_state);
 
-// Frees the pixels. Window, Texture and Renderer should be freed using SDL destructors.
+// Frees the pixels. Window, Texture and Renderer should be freed using SDL
+// destructors.
 void free_render_state(RenderState *state);
 
 #endif // RENDER_H

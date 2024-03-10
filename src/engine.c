@@ -1,6 +1,6 @@
 #include "SDL.h"
-#include "engine/global.h"
 #include "engine/render/render.h"
+#include "engine/state.h"
 #include "engine/types.h"
 #include "engine/view/view.h"
 #include <stdint.h>
@@ -9,10 +9,11 @@
 int main(int argc, char *argv[])
 {
 
+  EngineState engine_state = {0};
   // Initialise SDL
-  init_render_state();
+  init_render_state(&engine_state.render_state);
 
-  while (!global.quit)
+  while (!engine_state.quit)
   {
     SDL_Event ev;
     while (SDL_PollEvent(&ev))
@@ -20,27 +21,29 @@ int main(int argc, char *argv[])
       switch (ev.type)
       {
       case SDL_QUIT:
-        global.quit = true;
+        engine_state.quit = true;
         break;
       }
     }
 
     const u8 *keystate = SDL_GetKeyboardState(NULL);
-    processk(keystate);
+    processk(&engine_state.render_state, keystate);
 
-    memset(global.render_state.pixels, 0, sizeof(global.render_state.pixels));
-    render();
+    memset(engine_state.render_state.pixels, 0,
+           sizeof(engine_state.render_state.pixels));
+    render(&engine_state.render_state);
 
-    SDL_UpdateTexture(global.render_state.texture, NULL,
-                      global.render_state.pixels, SCREEN_WIDTH * 4);
-    SDL_RenderCopyEx(global.render_state.renderer, global.render_state.texture,
-                     NULL, NULL, 0.0, NULL, SDL_FLIP_VERTICAL);
-    SDL_RenderPresent(global.render_state.renderer);
+    SDL_UpdateTexture(engine_state.render_state.texture, NULL,
+                      engine_state.render_state.pixels, SCREEN_WIDTH * 4);
+    SDL_RenderCopyEx(engine_state.render_state.renderer,
+                     engine_state.render_state.texture, NULL, NULL, 0.0, NULL,
+                     SDL_FLIP_VERTICAL);
+    SDL_RenderPresent(engine_state.render_state.renderer);
   }
 
-  SDL_DestroyTexture(global.render_state.texture);
-  SDL_DestroyRenderer(global.render_state.renderer);
-  SDL_DestroyWindow(global.render_state.window);
-  free_render_state(&global.render_state);
+  SDL_DestroyTexture(engine_state.render_state.texture);
+  SDL_DestroyRenderer(engine_state.render_state.renderer);
+  SDL_DestroyWindow(engine_state.render_state.window);
+  free_render_state(&engine_state.render_state);
   return 0;
 }

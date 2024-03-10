@@ -7,13 +7,11 @@
 
 #include "render/render.h"
 
-typedef struct global
+typedef struct engine_state
 {
   RenderState render_state;
   // Flag for program control.
   bool quit;
-} Global;
-
-extern Global global;
+} EngineState;
 
 #endif // GLOBAL_H
