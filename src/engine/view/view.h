@@ -3,7 +3,7 @@
 
 #include "../types.h"
 
-static void rotate(f32 rot);
+void rotate(f32 rot);
 
 void processk(const u8 *ks);
 

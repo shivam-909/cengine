@@ -4,7 +4,7 @@
 #define ROTATION_SPEED ((f32)3.0f * 0.016f)
 #define MOVEMENT_SPEED ((f32)3.0f * 0.016f)
 
-static void rotate(f32 rot)
+void rotate(f32 rot)
 {
   const v2 d = global.render_state.params.dir,
            p = global.render_state.params.plane;
